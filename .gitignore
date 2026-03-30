@@ -8,3 +8,4 @@ coverage
 .vs
 bin
 obj
+log.txt

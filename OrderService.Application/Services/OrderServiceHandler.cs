@@ -1,4 +1,5 @@
-﻿using OrderService.Application.Interfaces;
+﻿using Microsoft.Extensions.Logging;
+using OrderService.Application.Interfaces;
 using OrderService.Domain.Entities;
 using OrderService.Domain.Interfaces;
 using System;
@@ -12,16 +13,18 @@ namespace OrderService.Application.Services
     public class OrderServiceHandler : IOrderService
     {
         private readonly IOrderRepository _repository;
+        private readonly ILogger<OrderServiceHandler> _logger;
 
-        public OrderServiceHandler(IOrderRepository repository)
+        public OrderServiceHandler(IOrderRepository repository, ILogger<OrderServiceHandler> logger)
         {
           _repository = repository;  
+            _logger = logger;
         }
         public async Task<Guid> CreateOrderAsync(decimal amount)
         {
             var order = new Order(amount);
             await _repository.SaveAsync(order);
-
+            _logger.LogInformation("Created order with amount {amount}", amount);
             return order.Id;
         }
     }
