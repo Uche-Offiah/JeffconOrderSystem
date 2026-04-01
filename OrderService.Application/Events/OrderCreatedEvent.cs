@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace OrderService.Application.Events
 {
-    internal class OrderCreatedEvent
+    public class OrderCreatedEvent
     {
+        public Guid OrderId { get; set; }
+        public decimal Amount { get; set; }
     }
 }

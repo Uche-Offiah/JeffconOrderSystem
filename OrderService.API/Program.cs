@@ -8,6 +8,7 @@ using FluentValidation;
 using OrderService.Application.Validators;
 using OrderService.Application.Middleware;
 using Serilog;
+using OrderService.Infrastructure.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,7 @@ builder.Host.UseSerilog();
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<IOrderService, OrderServiceHandler>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddSingleton<IEventPublisher, RabbitMqPublisher>();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("OrderDb"));
 builder.Services.AddControllers();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateOrderRequestValidation>();
