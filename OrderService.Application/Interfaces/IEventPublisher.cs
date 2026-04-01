@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace OrderService.Application.Interfaces
 {
-    internal interface IEventPublisher
+    public interface IEventPublisher
     {
+        Task PublishAsync<T>(T @event);
     }
 }
