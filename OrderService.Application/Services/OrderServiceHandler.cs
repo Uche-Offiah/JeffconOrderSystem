@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace OrderService.Application.Services
@@ -34,7 +35,17 @@ namespace OrderService.Application.Services
                 Amount = order.Amount,
             };
 
-            await _eventPublisher.PublishAsync(evt);
+            var outboxMessage = new OutboxMessage
+            {
+                Id = Guid.NewGuid(),
+                Type = nameof(OrderCreatedEvent),
+                Content = JsonSerializer.Serialize(evt),
+                OccurredOn = DateTime.UtcNow,
+                Processed = false
+            };
+
+            //await _eventPublisher.PublishAsync(evt);
+            await _repository.SaveOutboxAsync(outboxMessage);
 
             _logger.LogInformation("Created order with amount {amount}", amount);
             _logger.LogInformation("Ordercreated event published for {OrderId}", order.Id);

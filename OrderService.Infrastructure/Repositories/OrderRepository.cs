@@ -22,5 +22,11 @@ namespace OrderService.Infrastructure.Repositories
             await _context.Orders.AddAsync(order);
            await _context.SaveChangesAsync();
         }
+
+        public async Task SaveOutboxAsync(OutboxMessage message)
+        {
+            _context.OutboxMessages.Add(message);
+            await _context.SaveChangesAsync();
+        }
     }
 }

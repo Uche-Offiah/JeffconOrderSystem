@@ -24,6 +24,7 @@ builder.Host.UseSerilog();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddHostedService<OutboxProcessor>();
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<IOrderService, OrderServiceHandler>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
