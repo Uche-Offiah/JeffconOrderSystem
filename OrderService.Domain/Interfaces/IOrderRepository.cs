@@ -10,5 +10,6 @@ namespace OrderService.Domain.Interfaces
     public interface IOrderRepository
     {
         Task SaveAsync(Order order);
+        Task SaveOutboxAsync(OutboxMessage message);
     }
 }
