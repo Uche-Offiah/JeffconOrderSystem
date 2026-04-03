@@ -45,7 +45,8 @@ namespace OrderService.Application.Services
             };
 
             //await _eventPublisher.PublishAsync(evt);
-            await _repository.SaveOutboxAsync(outboxMessage);
+            //await _repository.SaveOutboxAsync(outboxMessage);
+            await _repository.SaveOrderWithOutboxAsync(order, outboxMessage);
 
             _logger.LogInformation("Created order with amount {amount}", amount);
             _logger.LogInformation("Ordercreated event published for {OrderId}", order.Id);

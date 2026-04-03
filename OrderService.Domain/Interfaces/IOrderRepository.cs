@@ -11,5 +11,6 @@ namespace OrderService.Domain.Interfaces
     {
         Task SaveAsync(Order order);
         Task SaveOutboxAsync(OutboxMessage message);
+        Task SaveOrderWithOutboxAsync(Order order, OutboxMessage message);
     }
 }
