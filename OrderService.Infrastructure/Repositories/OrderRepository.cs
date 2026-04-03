@@ -28,5 +28,25 @@ namespace OrderService.Infrastructure.Repositories
             _context.OutboxMessages.Add(message);
             await _context.SaveChangesAsync();
         }
+
+        public async Task SaveOrderWithOutboxAsync(Order order, OutboxMessage message)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                _context.Orders.Add(order);
+                _context.OutboxMessages.Add(message);
+
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
     }
 }

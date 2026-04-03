@@ -41,7 +41,9 @@ namespace OrderService.Infrastructure.Messaging
             await channel.BasicPublishAsync(
                 exchange: "",
                 routingKey: queueName,
-                body: body);
+                body: body,
+                mandatory: true
+                );
         }
 
     }
