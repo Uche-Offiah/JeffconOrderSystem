@@ -4,6 +4,7 @@ using OrderService.Application.Interfaces;
 using OrderService.Domain.Entities;
 using OrderService.Domain.Interfaces;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,10 +25,14 @@ namespace OrderService.Application.Services
           _logger = logger;
           _eventPublisher = eventPublisher;
         }
+
+        //public async Task<IEnumerable> GetOrdersAsync()
+        //{
+        //    return await _repository.GetAllOrdersAsync();
+        //}
         public async Task<Guid> CreateOrderAsync(decimal amount)
         {
             var order = new Order(amount);
-            await _repository.SaveAsync(order);
 
             var evt = new OrderCreatedEvent
             {
@@ -44,8 +49,6 @@ namespace OrderService.Application.Services
                 Processed = false
             };
 
-            //await _eventPublisher.PublishAsync(evt);
-            //await _repository.SaveOutboxAsync(outboxMessage);
             await _repository.SaveOrderWithOutboxAsync(order, outboxMessage);
 
             _logger.LogInformation("Created order with amount {amount}", amount);

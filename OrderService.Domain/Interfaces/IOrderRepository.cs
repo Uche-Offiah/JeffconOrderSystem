@@ -1,5 +1,6 @@
 ﻿using OrderService.Domain.Entities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +10,7 @@ namespace OrderService.Domain.Interfaces
 {
     public interface IOrderRepository
     {
-        Task SaveAsync(Order order);
-        Task SaveOutboxAsync(OutboxMessage message);
         Task SaveOrderWithOutboxAsync(Order order, OutboxMessage message);
+        //Task<IEnumerable> GetAllOrdersAsync();
     }
 }

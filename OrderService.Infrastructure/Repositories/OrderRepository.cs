@@ -17,21 +17,14 @@ namespace OrderService.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task SaveAsync(Order order)
-        {
-            await _context.Orders.AddAsync(order);
-           await _context.SaveChangesAsync();
-        }
-
-        public async Task SaveOutboxAsync(OutboxMessage message)
-        {
-            _context.OutboxMessages.Add(message);
-            await _context.SaveChangesAsync();
-        }
+        //public async Task<IEnumerable> GetAllOrdersAsync()
+        //{
+        //    return await _context.
+        //}
 
         public async Task SaveOrderWithOutboxAsync(Order order, OutboxMessage message)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
+            //using var transaction = await _context.Database.BeginTransactionAsync();
 
             try
             {
@@ -40,11 +33,11 @@ namespace OrderService.Infrastructure.Repositories
 
                 await _context.SaveChangesAsync();
 
-                await transaction.CommitAsync();
+               // await transaction.CommitAsync();
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
+                //await transaction.RollbackAsync();
                 throw;
             }
         }
