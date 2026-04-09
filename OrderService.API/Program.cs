@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
-    .WriteTo.Console()
+    //.WriteTo.Console()
     .WriteTo.File("log.txt",
     outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}>{NewLine}")
         //outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}<s:{SourceContext}>{NewLine}{Exception}")
@@ -38,7 +38,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.MapOpenApi("/JeffOrderSystem/v1.json");
 }
 app.UseSerilogRequestLogging();
 app.UseMiddleware<ExceptionMiddleware>();

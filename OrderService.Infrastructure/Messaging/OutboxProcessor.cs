@@ -20,9 +20,9 @@ namespace OrderService.Infrastructure.Messaging
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IEventPublisher _publisher;
-        private readonly ILogger _logger;
+        private readonly ILogger<OutboxProcessor> _logger;
 
-        public OutboxProcessor(IServiceProvider serviceProvider, IEventPublisher publisher, ILogger logger)
+        public OutboxProcessor(IServiceProvider serviceProvider, IEventPublisher publisher, ILogger<OutboxProcessor> logger)
         {
             _serviceProvider = serviceProvider;
             _publisher = publisher;
@@ -50,7 +50,10 @@ namespace OrderService.Infrastructure.Messaging
 
                 foreach (var message in messages)
                 {
-                    var type = Type.GetType($"OrderService.Application.Events.{message.Type}");
+                    var type = Type.GetType($"OrderService.Application.Events.{message.Type}, OrderService.Application");
+
+                    // OrderService.Application.Events.OrderCreatedEvent
+                    //var type = message.Type;
 
                     var @event = JsonSerializer.Deserialize(message.Content, type);
 
