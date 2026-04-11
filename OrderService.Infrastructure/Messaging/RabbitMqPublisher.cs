@@ -22,14 +22,14 @@ namespace OrderService.Infrastructure.Messaging
             };
         }
 
-        public async Task PublishAsync<T>(T @event)
+        public async Task PublishAsync(object @event, Type type)
         {
             using var connection = await _factory.CreateConnectionAsync();
             using var channel = await connection.CreateChannelAsync();
 
-            var queueName = typeof(T).Name;
+            var queueName = type.Name;
 
-            await channel.QueueDeclareAsync(
+            await channel.QueueDeclareAsync( //Do some refactoring on this 
                 queue: queueName,
                 durable: true,
                 exclusive: false,
