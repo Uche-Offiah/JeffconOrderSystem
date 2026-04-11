@@ -52,8 +52,6 @@ namespace OrderService.Infrastructure.Messaging
                 {
                     var type = Type.GetType($"OrderService.Application.Events.{message.Type}, OrderService.Application");
 
-                    // OrderService.Application.Events.OrderCreatedEvent
-                    //var type = message.Type;
 
                     var @event = JsonSerializer.Deserialize(message.Content, type);
 
@@ -61,7 +59,7 @@ namespace OrderService.Infrastructure.Messaging
                     {
                         await retryPolicy.ExecuteAsync(async () =>
                         {
-                            await _publisher.PublishAsync(@event);
+                            await _publisher.PublishAsync(@event, type);
                         });
 
                         message.Processed = true;
