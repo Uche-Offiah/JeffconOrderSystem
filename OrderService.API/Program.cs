@@ -9,6 +9,7 @@ using OrderService.Application.Validators;
 using OrderService.Application.Middleware;
 using Serilog;
 using OrderService.Infrastructure.Messaging;
+using Microsoft.AspNetCore.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,24 @@ builder.Services.AddSingleton<IEventPublisher, RabbitMqPublisher>();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("OrderDb"));
 builder.Services.AddControllers();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateOrderRequestValidation>();
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("fixed", config =>
+    {
+        config.Window = TimeSpan.FromMinutes(1);
+        config.PermitLimit = 100;
+        config.QueueLimit = 10;
+    });
+
+    options.AddSlidingWindowLimiter("sliding", config =>
+    {
+        config.Window = TimeSpan.FromMinutes(1);
+        config.SegmentsPerWindow = 6;
+        config.PermitLimit = 100;
+    });
+
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+});
 
 var app = builder.Build();
 
@@ -44,6 +63,7 @@ app.UseSerilogRequestLogging();
 app.UseMiddleware<ExceptionMiddleware>();
 app.MapControllers();
 app.UseHttpsRedirection();
+app.UseRateLimiter();
 
 app.Run();
 
