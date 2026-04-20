@@ -1,15 +1,16 @@
-using Microsoft.EntityFrameworkCore;
-using OrderService.Domain.Interfaces;
-using OrderService.Application.Interfaces;
-using OrderService.Application.Services;
-using OrderService.Infrastructure.Repositories;
-using OrderService.Infrastructure.Data;
 using FluentValidation;
-using OrderService.Application.Validators;
-using OrderService.Application.Middleware;
-using Serilog;
-using OrderService.Infrastructure.Messaging;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.EntityFrameworkCore;
+using OrderService.Application.Interfaces;
+using OrderService.Application.Middleware;
+using OrderService.Application.Services;
+using OrderService.Application.Validators;
+using OrderService.Domain.Interfaces;
+using OrderService.Infrastructure.Data;
+using OrderService.Infrastructure.Messaging;
+using OrderService.Infrastructure.Repositories;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,10 +19,8 @@ Log.Logger = new LoggerConfiguration()
     //.WriteTo.Console()
     .WriteTo.File("log.txt",
     outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}>{NewLine}")
-        //outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}<s:{SourceContext}>{NewLine}{Exception}")
-    .CreateLogger();
+    .CreateBootstrapLogger();
 
-builder.Host.UseSerilog();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -33,6 +32,12 @@ builder.Services.AddSingleton<IEventPublisher, RabbitMqPublisher>();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("OrderDb"));
 builder.Services.AddControllers();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateOrderRequestValidation>();
+builder.Services.AddSerilog((services, lc) => lc
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .WriteTo.Console()
+    .Enrich.FromLogContext()
+);
 builder.Services.AddRateLimiter(options =>
 {
     options.AddFixedWindowLimiter("fixed", config =>
