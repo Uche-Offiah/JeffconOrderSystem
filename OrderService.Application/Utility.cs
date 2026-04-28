@@ -89,5 +89,48 @@ namespace FHIRDataExchange
             return fileContent;
         }
 
+        // Validates a Nigerian phone number.
+        // Accepts formats like 08012345678 or +2348012345678.
+        public static bool IsValidNigerianPhoneNumber(string phoneNumber)
+        {
+            if (string.IsNullOrWhiteSpace(phoneNumber))
+                return false;
+
+            // Remove spaces, dashes, and parentheses
+            phoneNumber = Regex.Replace(phoneNumber, @"[\s\-\(\)]", "");
+
+            // Regex pattern:
+            // ^(0[789]\d{8})$  => Local format e.g., 08012345678
+            // ^(\+234[789]\d{8})$ => International format e.g., +2348012345678
+            var pattern = @"^(0[789]\d{8}|\+234[789]\d{8})$";
+
+            return Regex.IsMatch(phoneNumber, pattern);
+        }
+
+
+        private static readonly Random _random = new Random();
+
+
+        public static string GeneratePhoneNumber(bool internationalFormat = false)
+        {
+            // Valid Nigerian GSM prefixes (common carriers)
+            string[] prefixes = { "70", "80", "81", "90", "91" };
+
+            // Pick a random prefix
+            string prefix = prefixes[_random.Next(prefixes.Length)];
+
+            // Generate remaining 8 digits
+            string numberBody = _random.Next(10000000, 99999999).ToString();
+
+            if (internationalFormat)
+            {
+                return $"+234{prefix}{numberBody}";
+            }
+            else
+            {
+                return $"0{prefix}{numberBody}";
+            }
+        }
+
     }
 }
