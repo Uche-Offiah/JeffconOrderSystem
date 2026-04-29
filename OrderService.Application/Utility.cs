@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -99,9 +100,6 @@ namespace FHIRDataExchange
             // Remove spaces, dashes, and parentheses
             phoneNumber = Regex.Replace(phoneNumber, @"[\s\-\(\)]", "");
 
-            // Regex pattern:
-            // ^(0[789]\d{8})$  => Local format e.g., 08012345678
-            // ^(\+234[789]\d{8})$ => International format e.g., +2348012345678
             var pattern = @"^(0[789]\d{8}|\+234[789]\d{8})$";
 
             return Regex.IsMatch(phoneNumber, pattern);
