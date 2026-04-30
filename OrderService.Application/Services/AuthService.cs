@@ -19,37 +19,32 @@ namespace OrderService.Application.Services
             return string.Empty;
         }
 
-        public string GenerateJWTToken(OrderServiceUser user)
-        {
-            var issuer = _configuration["Jwt:Issuer"];
-            var audience = _configuration["Jwt:Audience"];
-            var secret = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
-            var expires = DateTime.Now.AddMinutes(10);
+        //public string GenerateJWTToken(OrderServiceUser user)
+        //{
+        //    var issuer = _configuration["Jwt:Issuer"];
+        //    var audience = _configuration["Jwt:Audience"];
+        //    var secret = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
+        //    var expires = DateTime.Now.AddMinutes(10);
 
-            SecurityTokenDescriptor descriptor = new()
-            {
-                Issuer = issuer,
-                Audience = audience,
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                new("Id", user?.Id),
-                new("EmailAddress", user?.EmailAddress),
-                //new(ClaimTypes.Role, user.UserCategory.ToString())
-                }),
-                Expires = expires,
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256Signature)
-            };
+        //    SecurityTokenDescriptor descriptor = new()
+        //    {
+        //        Issuer = issuer,
+        //        Audience = audience,
+        //        Subject = new ClaimsIdentity(new Claim[]
+        //        {
+        //        new("Id", user?.Id),
+        //        new("EmailAddress", user?.EmailAddress),
+        //        //new(ClaimTypes.Role, user.UserCategory.ToString())
+        //        }),
+        //        Expires = expires,
+        //        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256Signature)
+        //    };
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            SecurityToken token = tokenHandler.CreateToken(descriptor);
-            var jwtToken = tokenHandler.WriteToken(token);
+        //    var tokenHandler = new JwtSecurityTokenHandler();
+        //    SecurityToken token = tokenHandler.CreateToken(descriptor);
+        //    var jwtToken = tokenHandler.WriteToken(token);
 
-            response.Status = 200;
-            response.Success = true;
-            response.Message = "Success";
-            response.Data = jwtToken;
-
-            return response;
-        }
+        //    return jwtToken;
+        //}
     }
 }
