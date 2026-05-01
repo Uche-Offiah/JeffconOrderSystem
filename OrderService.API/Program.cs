@@ -28,6 +28,7 @@ builder.Services.AddHostedService<OutboxProcessor>();
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<IOrderService, OrderServiceHandler>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderAuth, AuthService>();
 builder.Services.AddSingleton<IEventPublisher, RabbitMqPublisher>();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("OrderDb"));
 builder.Services.AddControllers();
