@@ -37,8 +37,6 @@ namespace OrderService.API.Controllers
                 signingCredentials: creds
             );
 
-            //var testToken = new JwtSecurityTokenHandler().WriteToken(token);
-            //Console.WriteLine("JWT Token:", testToken);
 
             return Ok(new
             {
