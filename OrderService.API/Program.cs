@@ -60,7 +60,7 @@ builder.Services.AddRateLimiter(options =>
 
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 });
-var key = Encoding.UTF8.GetBytes("uche_super_secret_key_0123456789");
+var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -89,6 +89,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi("/JeffOrderSystem/v1.json");
 }
 app.UseSerilogRequestLogging();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseMiddleware<ExceptionMiddleware>();
 app.MapControllers();
 app.UseHttpsRedirection();
