@@ -28,7 +28,7 @@ namespace OrderService.API.Controllers
         [HttpPost("login")]
         public IActionResult Login()
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("uche_super_secret_key_0123456789"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
